@@ -50,10 +50,6 @@ def main():
             tank.pos_x += vel
             barrel.pos_x += vel
 
-        if keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
-            tank.change_orientation("down, right")
-
-
         pygame.display.flip()
         for x in range(0, 1024, 128):
             for y in range(0, 768, 128):
