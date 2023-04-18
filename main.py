@@ -17,7 +17,7 @@ vel = 0.5
 
 def main():
     tank = Tank(50, 50, "./graphics/Tanks/tankBlack_outline.png")
-    barrel = Tank.Barrel(tank.pos_y, tank.pos_y, "./graphics/Tanks/barrelBlack_outline.png")
+    barrel = tank.get_the_barrel()
     tanks_group = pygame.sprite.Group()
     tanks_group.add(tank)
     tanks_group.add(barrel)
@@ -30,22 +30,22 @@ def main():
 
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_s]:
             tank.change_orientation("down")
             tank.pos_y += vel
             barrel.pos_y += vel
 
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w]:
             tank.change_orientation("up")
             tank.pos_y -= vel
             barrel.pos_y -= vel
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_a]:
             tank.change_orientation("left")
             tank.pos_x -= vel
             barrel.pos_x -= vel
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d]:
             tank.change_orientation("right")
             tank.pos_x += vel
             barrel.pos_x += vel

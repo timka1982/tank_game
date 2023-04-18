@@ -9,10 +9,14 @@ class Tank(pygame.sprite.Sprite):
         self.image = pygame.image.load(tank_image)
         self.image = pygame.transform.rotate(self.image, 180)
         self.rect = self.image.get_rect()
+        self.barrel = Tank.Barrel(self.pos_x, self.pos_y + 20, "./graphics/Tanks/barrelBlack_outline.png")
         self.orientation = "down"
 
     def update(self):
         self.rect.center = [self.pos_x, self.pos_y]
+
+    def get_the_barrel(self):
+        return self.barrel
 
     def get_orientation(self):
         return self.orientation
@@ -83,3 +87,5 @@ class Tank(pygame.sprite.Sprite):
 
         def update(self):
             self.rect.center = [self.pos_x, self.pos_y]
+
+
