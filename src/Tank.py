@@ -1,4 +1,5 @@
 import pygame
+import math
 
 
 class Tank(pygame.sprite.Sprite):
@@ -9,7 +10,7 @@ class Tank(pygame.sprite.Sprite):
         self.image = pygame.image.load(tank_image)
         self.image = pygame.transform.rotate(self.image, 180)
         self.rect = self.image.get_rect()
-        self.barrel = Tank.Barrel(self.pos_x, self.pos_y + 20, "./graphics/Tanks/barrelBlack_outline.png")
+        self.barrel = Tank.Barrel(self, self.pos_x, self.pos_y + 20, "./graphics/Tanks/barrelBlack_outline.png")
         self.orientation = "down"
 
     def update(self):
@@ -78,14 +79,34 @@ class Tank(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.image, 90)
 
     class Barrel(pygame.sprite.Sprite):
-        def __init__(self, pos_x, pos_y, barrel_image):
+        def __init__(self, tank_base, pos_x, pos_y, barrel_image):
             super().__init__()
+            self.tank_base = tank_base
             self.pos_x = pos_x
             self.pos_y = pos_y
             self.image = pygame.image.load(barrel_image)
             self.rect = self.image.get_rect()
+            self.angle = 0
 
         def update(self):
-            self.rect.center = [self.pos_x, self.pos_y]
+            self.rect.center = [self.tank_base.pos_x, self.tank_base.pos_y]
+
+        def shoot(self, mouse_pos):
+            self.rotate_barrel(mouse_pos)
+
+        def rotate_barrel(self, mouse_pos):
+            angle = self.calculate_angle(mouse_pos, (self.tank_base.pos_x, self.tank_base.pos_y))
+            self.image = pygame.transform.rotate(self.image, -angle)
+            self.rect = self.image.get_rect()
 
 
+        @staticmethod
+        def calculate_angle(target_p, gun_p):
+            delta_x = target_p[0] - gun_p[0]
+            delta_y = target_p[1] - gun_p[1]
+
+            radian = math.atan2(delta_y, delta_x)
+            angle = math.degrees(radian)
+            print(f"Angle is {round(angle)}")
+
+            return round(angle)

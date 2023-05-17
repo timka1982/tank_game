@@ -28,6 +28,9 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
+            if event.type == pygame.MOUSEBUTTONUP:
+                pygame.draw.circle(win, (255, 0, 0), pygame.mouse.get_pos(), 5)
+                barrel.shoot(pygame.mouse.get_pos())
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_s]:
