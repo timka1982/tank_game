@@ -1,6 +1,7 @@
 import pygame
 import logging
 from src.Tank import Tank
+from pygame import Vector2
 
 
 # general setup
@@ -9,21 +10,25 @@ clock = pygame.time.Clock()
 logging.basicConfig(filename=f"./game_proj.log", level=logging.INFO)
 
 # game screen
-win = pygame.display.set_mode((1024, 768))
+win = pygame.display.set_mode((800, 600), flags=pygame.SCALED)
 background = pygame.image.load("./graphics/Environment/dirt.png")
 pygame.display.set_caption("War of Tanks")
 vel = 0.5
 
 
 def main():
-    tank = Tank(50, 50, "./graphics/Tanks/tankBlack_outline.png")
-    barrel = Tank.Barrel(tank.pos_y, tank.pos_y, "./graphics/Tanks/barrelBlack_outline.png")
+    tank = Tank(Vector2(50, 50), "./graphics/Tanks/tankBlack_outline.png")
+    barrel = Tank.Barrel(tank, "./graphics/Tanks/barrelBlack_outline.png", starting_angle=90)
     tanks_group = pygame.sprite.Group()
+
     tanks_group.add(tank)
     tanks_group.add(barrel)
 
     run = True
     while run:
+        fps = clock.get_fps()
+        pygame.display.set_caption(f'FPS: {fps}')
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -32,31 +37,31 @@ def main():
 
         if keys[pygame.K_DOWN]:
             tank.change_orientation("down")
-            tank.pos_y += vel
-            barrel.pos_y += vel
+            tank.pos.y += vel
 
         if keys[pygame.K_UP]:
             tank.change_orientation("up")
-            tank.pos_y -= vel
-            barrel.pos_y -= vel
+            tank.pos.y -= vel
 
         if keys[pygame.K_LEFT]:
             tank.change_orientation("left")
-            tank.pos_x -= vel
-            barrel.pos_x -= vel
+            tank.pos.x -= vel
 
         if keys[pygame.K_RIGHT]:
             tank.change_orientation("right")
-            tank.pos_x += vel
-            barrel.pos_x += vel
+            tank.pos.x += vel
 
         pygame.display.flip()
         for x in range(0, 1024, 128):
             for y in range(0, 768, 128):
                 win.blit(background, (x, y))
 
-        tanks_group.draw(win)
         tanks_group.update()
+        tanks_group.draw(win)
+
+        pygame.draw.circle(win, (0,0,255), tank.rect.midbottom, 1)
+        pygame.draw.circle(win, (255,0,0), barrel.rect.midbottom, 1)
+
         clock.tick(60)
 
     pygame.quit()
@@ -64,4 +69,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

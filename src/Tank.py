@@ -1,18 +1,22 @@
 import pygame
+import logging
+from pygame import Vector2
 
 
 class Tank(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tank_image):
+    def __init__(self, tank_pos, tank_image):
         super().__init__()
-        self.pos_x = pos_x
-        self.pos_y = pos_y
+        self.pos = tank_pos
         self.image = pygame.image.load(tank_image)
         self.image = pygame.transform.rotate(self.image, 180)
         self.rect = self.image.get_rect()
         self.orientation = "down"
 
     def update(self):
-        self.rect.center = [self.pos_x, self.pos_y]
+        self.rect = self.image.get_rect(center=self.pos)
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
 
     def get_orientation(self):
         return self.orientation
@@ -74,12 +78,33 @@ class Tank(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.image, 90)
 
     class Barrel(pygame.sprite.Sprite):
-        def __init__(self, pos_x, pos_y, barrel_image):
+        def __init__(self, tank_base, barrel_image, starting_angle=0):
             super().__init__()
-            self.pos_x = pos_x
-            self.pos_y = pos_y
-            self.image = pygame.image.load(barrel_image)
-            self.rect = self.image.get_rect()
+            self.tank_base = tank_base
+            self.angle = starting_angle
+            self.pos = Vector2(self.tank_base.pos.x + 1, self.tank_base.pos.y + 23)
+
+            self.image_origin = pygame.image.load(barrel_image)
+            self.image = self.image_origin
+
+            self.image, self.rect = rotate_barrel(self.image_origin, self.angle, self.tank_base.pos, self.pos)
+            # self.rect = self.image.get_rect(center=self.pos)
 
         def update(self):
-            self.rect.center = [self.pos_x, self.pos_y]
+            pass
+            # self.angle = self.angle + 1
+            # self.pos = Vector2(self.tank_base.rect.centerx, self.tank_base.rect.centery)
+            # self.pos = Vector2(self.tank_base.pos.x + 1, self.tank_base.pos.y + 23)
+            # self.image, self.rect = rotate_barrel(self.image_origin, self.angle, self.tank_base.pos, self.pos)
+
+
+        def draw(self, surface):
+            surface.blit(self.image, self.rect)
+
+
+def rotate_barrel(image, angle, pivot, origin):
+    surf = pygame.transform.rotate(image, angle)
+    offset = pivot + (origin - pivot).rotate(-angle)
+    rect = surf.get_rect(center=offset)
+
+    return surf, rect
