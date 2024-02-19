@@ -1,6 +1,7 @@
 import pygame
 import logging
 from pygame import Vector2
+from math import atan2, degrees
 
 
 class Tank(pygame.sprite.Sprite):
@@ -87,16 +88,17 @@ class Tank(pygame.sprite.Sprite):
             self.image_origin = pygame.image.load(barrel_image)
             self.image = self.image_origin
 
+            self.rect = self.image.get_rect(center=self.pos)
             self.image, self.rect = rotate_barrel(self.image_origin, self.angle, self.tank_base.pos, self.pos)
-            # self.rect = self.image.get_rect(center=self.pos)
 
         def update(self):
-            pass
-            # self.angle = self.angle + 1
-            # self.pos = Vector2(self.tank_base.rect.centerx, self.tank_base.rect.centery)
-            # self.pos = Vector2(self.tank_base.pos.x + 1, self.tank_base.pos.y + 23)
-            # self.image, self.rect = rotate_barrel(self.image_origin, self.angle, self.tank_base.pos, self.pos)
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEMOTION:
+                    self.angle = calculate_angle(self.tank_base.pos, pygame.mouse.get_pos())
+                    print(f"My angle is {self.angle}")
 
+            self.pos = Vector2(self.tank_base.pos.x + 1, self.tank_base.pos.y + 23)
+            self.image, self.rect = rotate_barrel(self.image_origin, self.angle, self.tank_base.pos, self.pos)
 
         def draw(self, surface):
             surface.blit(self.image, self.rect)
@@ -108,3 +110,24 @@ def rotate_barrel(image, angle, pivot, origin):
     rect = surf.get_rect(center=offset)
 
     return surf, rect
+
+
+def calculate_angle(pivot, mouse_pos):
+    delta_y = ((mouse_pos[1])-(pivot[1]))**2
+    delta_x = ((mouse_pos[0])-(pivot[0]))**2
+
+    angle = degrees(atan2(delta_y, delta_x))
+
+    if mouse_pos[0] >= pivot.x and mouse_pos[1] < pivot.y:
+        angle = angle + 90
+
+    if mouse_pos[0] >= pivot.x and mouse_pos[1] > pivot.y:
+        angle = -angle + 90
+
+    if mouse_pos[0] < pivot.x and mouse_pos[1] >= pivot.y:
+        angle = angle - 90
+
+    if mouse_pos[0] < pivot.x and mouse_pos[1] <= pivot.y:
+        angle = -angle - 90
+
+    return angle

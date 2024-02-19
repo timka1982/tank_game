@@ -2,11 +2,18 @@ import pygame
 import logging
 from src.Tank import Tank
 from pygame import Vector2
+from src.Bullet import Bullet
+from pathlib import Path
 
 
 # general setup
 pygame.init()
 clock = pygame.time.Clock()
+
+log_file = Path(f"./game_proj.log")
+if log_file.is_file():
+    log_file.unlink()
+
 logging.basicConfig(filename=f"./game_proj.log", level=logging.INFO)
 
 # game screen
@@ -17,8 +24,8 @@ vel = 0.5
 
 
 def main():
-    tank = Tank(Vector2(50, 50), "./graphics/Tanks/tankBlack_outline.png")
-    barrel = Tank.Barrel(tank, "./graphics/Tanks/barrelBlack_outline.png", starting_angle=90)
+    tank = Tank(Vector2(200, 200), "./graphics/Tanks/tankBlack_outline.png")
+    barrel = Tank.Barrel(tank, "./graphics/Tanks/barrelBlack_outline.png", starting_angle=45)
     tanks_group = pygame.sprite.Group()
 
     tanks_group.add(tank)
@@ -32,6 +39,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                logging.info(f"Barrel angle is: {barrel.angle}")
+                bullet = Bullet(barrel.angle, barrel.rect.center,
+                                "./graphics/Bullets/bulletBeige_outline.png")
+                tanks_group.add(bullet)
 
         keys = pygame.key.get_pressed()
 
@@ -59,8 +72,8 @@ def main():
         tanks_group.update()
         tanks_group.draw(win)
 
-        pygame.draw.circle(win, (0,0,255), tank.rect.midbottom, 1)
-        pygame.draw.circle(win, (255,0,0), barrel.rect.midbottom, 1)
+        # pygame.draw.circle(win, (0,0,255), tank.rect.midbottom, 1)
+        pygame.draw.circle(win, (255,0,0), barrel.rect.center, 1)
 
         clock.tick(60)
 
