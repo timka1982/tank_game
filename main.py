@@ -42,7 +42,7 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 bullet = Bullet(barrel.image_height, barrel.angle, barrel.rect.center,
-                                "./graphics/Bullets/bulletBeige_outline.png")
+                                "./graphics/Bullets/bulletBeige_outline.png", win)
                 tanks_group.add(bullet)
 
         keys = pygame.key.get_pressed()

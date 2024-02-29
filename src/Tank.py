@@ -102,8 +102,8 @@ class Tank(pygame.sprite.Sprite):
             self.pos = Vector2(self.tank_base.pos.x + 1, self.tank_base.pos.y + 23)
             self.image, self.rect = rotate_barrel(self.image_origin, self.angle, self.tank_base.pos, self.pos)
 
-        def draw(self, surface):
-            surface.blit(self.image, self.rect)
+        # def draw(self, surface):
+        #     surface.blit(self.image, self.rect)
 
 
 def rotate_barrel(image, angle, pivot, origin):
