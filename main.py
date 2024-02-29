@@ -41,26 +41,25 @@ def main():
                 run = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                logging.info(f"Barrel angle is: {barrel.angle}")
-                bullet = Bullet(barrel.angle, barrel.rect.center,
-                                "./graphics/Bullets/bulletBeige_outline.png")
+                bullet = Bullet(barrel.image_height, barrel.angle, barrel.rect.center,
+                                "./graphics/Bullets/bulletBeige_outline.png", win)
                 tanks_group.add(bullet)
 
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_s]:
             tank.change_orientation("down")
             tank.pos.y += vel
 
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w]:
             tank.change_orientation("up")
             tank.pos.y -= vel
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_a]:
             tank.change_orientation("left")
             tank.pos.x -= vel
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d]:
             tank.change_orientation("right")
             tank.pos.x += vel
 

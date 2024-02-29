@@ -1,1 +1,8 @@
+/game_venv
+/.idea/*
+
 *.pyc
+*.xml
+*.iml
+*.log
+*.txt
