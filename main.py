@@ -18,7 +18,7 @@ logging.basicConfig(filename=f"./game_proj.log", level=logging.INFO)
 
 # game screen
 win = pygame.display.set_mode((800, 600), flags=pygame.SCALED)
-background = pygame.image.load("./graphics/Environment/dirt.png")
+background = pygame.image.load("./graphics/Environment/sand.png")
 pygame.display.set_caption("War of Tanks")
 vel = 0.5
 
@@ -32,21 +32,28 @@ def main():
     tanks_group.add(barrel)
 
     run = True
+
     while run:
+        click = False
         fps = clock.get_fps()
         pygame.display.set_caption(f'FPS: {fps}')
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-
+        events_list = pygame.event.get()
+        for event in events_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                bullet = Bullet(barrel.image_height, barrel.angle, barrel.rect.center,
-                                "./graphics/Bullets/bulletBeige_outline.png", win)
-                tanks_group.add(bullet)
+                click = True
+
+        pygame.display.flip()
+        for x in range(0, 1024, 128):
+            for y in range(0, 768, 128):
+                win.blit(background, (x, y))
+
+        if click:
+            bullet = Bullet(barrel.image_height, barrel.angle, barrel.rect.center,
+                            "./graphics/Bullets/bulletBeige_outline.png", win)
+            tanks_group.add(bullet)
 
         keys = pygame.key.get_pressed()
-
         if keys[pygame.K_s]:
             tank.change_orientation("down")
             tank.pos.y += vel
@@ -63,16 +70,15 @@ def main():
             tank.change_orientation("right")
             tank.pos.x += vel
 
-        pygame.display.flip()
-        for x in range(0, 1024, 128):
-            for y in range(0, 768, 128):
-                win.blit(background, (x, y))
+        for event in events_list:
+            if event.type == pygame.QUIT:
+                run = False
 
         tanks_group.update()
         tanks_group.draw(win)
 
         # pygame.draw.circle(win, (0,0,255), tank.rect.midbottom, 1)
-        pygame.draw.circle(win, (255,0,0), barrel.rect.center, 1)
+        # pygame.draw.circle(win, (255,0,0), barrel.rect.center, 1)
 
         clock.tick(60)
 
