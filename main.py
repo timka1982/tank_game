@@ -43,10 +43,14 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 click = True
 
+            if event.type == pygame.QUIT:
+                run = False
+
         pygame.display.flip()
-        for x in range(0, 1024, 128):
-            for y in range(0, 768, 128):
-                win.blit(background, (x, y))
+        win.fill((255, 255, 255))
+        # for x in range(0, 1024, 128):
+        #     for y in range(0, 768, 128):
+        #         win.blit(background, (x, y))
 
         if click:
             bullet = Bullet(barrel.image_height, barrel.angle, barrel.rect.center,
@@ -69,10 +73,6 @@ def main():
         if keys[pygame.K_d]:
             tank.change_orientation("right")
             tank.pos.x += vel
-
-        for event in events_list:
-            if event.type == pygame.QUIT:
-                run = False
 
         tanks_group.update()
         tanks_group.draw(win)
