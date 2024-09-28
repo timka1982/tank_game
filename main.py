@@ -24,10 +24,13 @@ vel = 0.5
 
 
 def main():
+    tanks_group = pygame.sprite.Group()
+    moving_ojects = []
+
     tank = Tank(Vector2(200, 200), "./graphics/Tanks/tankBlack_outline.png")
     barrel = Tank.Barrel(tank, "./graphics/Tanks/barrelBlack_outline.png", starting_angle=45)
-    tanks_group = pygame.sprite.Group()
 
+    moving_ojects.add(tank)
     tanks_group.add(tank)
     tanks_group.add(barrel)
 
