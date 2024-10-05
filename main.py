@@ -1,9 +1,11 @@
+import sys
 import pygame
 import logging
 from src.Tank import Tank
 from pygame import Vector2
 from src.Bullet import Bullet
 from pathlib import Path
+from src.utils.utils import game_utils
 
 
 # general setup
@@ -17,7 +19,7 @@ if log_file.is_file():
 logging.basicConfig(filename=f"./game_proj.log", level=logging.INFO)
 
 # game screen
-win = pygame.display.set_mode((800, 600), flags=pygame.SCALED)
+win = pygame.display.set_mode((1920, 1080), flags=pygame.SCALED)
 background = pygame.image.load("./graphics/Environment/sand.png")
 pygame.display.set_caption("War of Tanks")
 vel = 0.5
@@ -25,15 +27,22 @@ vel = 0.5
 
 def main():
     tanks_group = pygame.sprite.Group()
-    moving_ojects = []
-
     tank = Tank(Vector2(200, 200), "./graphics/Tanks/tankBlack_outline.png")
-    barrel = Tank.Barrel(tank, "./graphics/Tanks/barrelBlack_outline.png", starting_angle=45)
+    barrel = Tank.Barrel(tank, "./graphics/Tanks/barrelBlack_outline.png", starting_angle=360)
 
-    moving_ojects.add(tank)
     tanks_group.add(tank)
     tanks_group.add(barrel)
 
+    enemy_x = game_utils.get_random_coord(int(1920/2), 1920)
+    enemy_y = game_utils.get_random_coord(1, 1080)
+
+    enemy_tank = Tank(Vector2(enemy_x, enemy_y), "./graphics/Tanks/tankRed_outline.png")
+    enemy_barrel = Tank.Barrel(enemy_tank, "./graphics/Tanks/barrelRed_outline.png", starting_angle=360)
+
+    tanks_group.add(enemy_tank)
+    tanks_group.add(enemy_barrel)
+
+    
     run = True
 
     while run:
@@ -52,8 +61,8 @@ def main():
         pygame.display.flip()
         win.fill((255, 255, 255))
         # for x in range(0, 1024, 128):
-        #     for y in range(0, 768, 128):
-        #         win.blit(background, (x, y))
+            # for y in range(0, 768, 128):
+                # win.blit(background, (x, y))
 
         if click:
             bullet = Bullet(barrel.image_height, barrel.angle, barrel.rect.center,
@@ -89,4 +98,5 @@ def main():
 
 
 if __name__ == '__main__':
+    print(sys.version_info)
     main()
