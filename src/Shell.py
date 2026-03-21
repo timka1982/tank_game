@@ -1,5 +1,6 @@
 import math
 import pygame
+import threading
 from copy import deepcopy
 
 from pygame import Vector2
@@ -18,7 +19,8 @@ class Shell(MovingObject):
 
         self.image_height = self.image.get_height()
 
-        self.image = pygame.transform.rotate(self.image_origin, self.angle + 180)
+        self.image = pygame.transform.rotozoom(self.image_origin, int(self.angle) + 180, 1.0)
+        # self.image = pygame.transform.rotate(self.image_origin, self.angle + 180)
         self.pos.x += 1.5 * (barrel_height/2 + self.image_height/2) * math.sin(math.radians(self.angle))
         self.pos.y += 1.5 * (barrel_height/2 + self.image_height/2) * math.cos(math.radians(self.angle))
         self.start_pos = deepcopy(self.pos)
@@ -31,7 +33,7 @@ class Shell(MovingObject):
     def update(self):
         self.rect = self.image.get_rect(center=self.pos)
 
-    def move(self, keys):
+    def move(self, keys, dt):
         self.pos.x += 5 * math.sin(math.radians(self.angle))
         self.pos.y += 5 * math.cos(math.radians(self.angle))
 
@@ -69,8 +71,9 @@ class Shell(MovingObject):
     #         self.rect = self.image.get_rect(center=self.pos)
     #
     #     def animate_shoot(self, game_surface):
-    #         event_key = threading.Event()
+            #         event_key = threading.Event()
     #         thread_key = threading.Thread(target=self.draw_animation, args=(game_surface, event_key))
+    #
     #
     #         thread_key.setDaemon(True)
     #         thread_key.start()

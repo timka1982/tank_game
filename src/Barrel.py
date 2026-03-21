@@ -1,4 +1,3 @@
-import pdb
 import pygame
 from src.MovingObject import MovingObject
 from pygame import Vector2
@@ -17,7 +16,7 @@ class Barrel(MovingObject):
     def update(self):
         self.image, self.rect = self.rotate_barrel(self.image_origin, self.angle, self.tank_base.pos, self.pos)
 
-    def move(self, keys):
+    def move(self, keys, dt):
         if not self.tank_base.is_enemy:
             self.angle = self.calculate_angle(self.tank_base.pos, pygame.mouse.get_pos())
 
@@ -46,7 +45,7 @@ class Barrel(MovingObject):
         delta_x, delta_y = mouse_pos[0] - pivot[0], mouse_pos[1] - pivot[1]
 
         angle = degrees(atan2(-delta_y, delta_x)) + 90
-        return angle
+        return int(angle)
 
     def check_collisions(self, game_objects):
         pass
