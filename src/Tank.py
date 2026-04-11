@@ -1,6 +1,5 @@
 from random import randint
 import pygame
-import random
 import operator
 from src.MovingObject import MovingObject
 from src.Barrel import Barrel
@@ -29,13 +28,12 @@ class Tank(MovingObject):
 			pygame.K_a: ("left", Vector2(-1, 0)),
 			pygame.K_d: ("right", Vector2(1, 0))
 		}
+		self.op = None
 
 	def update(self):
-		print(f"I am {self.is_enemy}, my state is {self.state}")
 		if self.state == TankState.ROTATING:
-			self.angle = (self.angle + 3) % 360
-			self.image = pygame.transform.rotate(self.image_origin, self.angle)
-			print(f"My angle is {self.angle}")
+			self.angle = self.op(self.angle, 3) % 360
+			self.image = pygame.transform.rotate(self.image_origin, self.angle - 270)
 			if self.angle == self.target_angle:
 				self.state = TankState.IDLE
 				self.target_angle = None
@@ -82,29 +80,49 @@ class Tank(MovingObject):
 		if self.orientation != current_key_direction:
 			self.state = TankState.ROTATING
 			angle_map = {
-				"up": 180,
-				"down": -180,
-				"left": 90,
-				"right": 90,
+				"up": {
+					"left": 90, 
+					"right": -90,
+					"down": -180, 
+					},
+				"down": {
+					"up": 180,
+					"left": -90,
+					"right": 90
+				},
+				"left": {
+					"up": -90,
+					"down": 90,
+					"right": -180
+				},
+				"right": {
+					"up": 90,
+					"down": -90,
+					"left": 180
+				}
 			}
-			self.target_angle = (self.angle + angle_map[current_key_direction]) % 360
+			self.target_angle = (self.angle + angle_map[self.orientation][current_key_direction]) % 360
+			print(f"Target angle: {self.target_angle}\nCurrent angle {self.angle}")
+			self.op = operator.sub if self.target_angle < self.angle else operator.add
 			self.set_orientation(current_key_direction)
 
 	# move the pos coordinates of the object
 	def move(self, keys, dt):
 		if self.is_enemy:
 			return
-		for key, (direction, vec) in self.direction_map.items():
-			if keys[key]:
-				self.is_change_direction(direction)
-				if self.vel < TankMovement.MAX_VEL.value:
-					self.vel += TankMovement.ACCELERATION.value * dt
-					self.vel = min(self.vel, TankMovement.MAX_VEL.value)
-				displacement = vec * self.vel * dt
-				new_pos = self.pos + displacement
-				if not game_utils.is_outside_the_window(new_pos.x, new_pos.y):
-					self.pos = new_pos
-				break
+		
+		elif self.state != TankState.ROTATING:
+			for key, (direction, vec) in self.direction_map.items():
+				if keys[key]:
+					self.is_change_direction(direction)
+					if self.vel < TankMovement.MAX_VEL.value:
+						self.vel += TankMovement.ACCELERATION.value * dt
+						self.vel = min(self.vel, TankMovement.MAX_VEL.value)
+					displacement = vec * self.vel * dt
+					new_pos = self.pos + displacement
+					if not game_utils.is_outside_the_window(new_pos.x, new_pos.y):
+						self.pos = new_pos
+					break
 
 	def get_if_enemy(self):
 		return self.is_enemy

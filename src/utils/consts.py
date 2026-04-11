@@ -9,12 +9,12 @@ class TankMovement(Enum):
     MAX_VEL = 150
     ACCELERATION = 5
     DECELERATION = 0.05
-    START_ANGLE = 0
+    START_ANGLE = 270
 
 
 class FireRanges(Enum):
     TANK_DETECTION_RANGE = 300
-    SHELL_FIRE_RANGE = 270
+    SHELL_FIRE_RANGE = 900
 
 class ObjectTypes(Enum):
     TANK = "TANK"
