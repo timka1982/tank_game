@@ -1,5 +1,7 @@
 from random import randint
 import pygame
+import random
+import operator
 from src.MovingObject import MovingObject
 from src.Barrel import Barrel
 from src.Shell import Shell
@@ -11,10 +13,9 @@ class Tank(MovingObject):
 	def __init__(self, tank_pos, tank_image, barrel_image, is_enemy, player_tank=None):
 		super().__init__(tank_pos, tank_image, )
 		self.is_enemy=is_enemy
-		self.orientation = "down"
+		self.orientation = "up"
+		self.angle = TankMovement.START_ANGLE.value
 		self.vel = TankMovement.INITIAL_VEL.value
-		self.angle = 90
-		# self.image = pygame.transform.rotate(self.image, self.angle)
 		self.barrel = Barrel(tank_base=self, barrel_pos=Vector2(tank_pos.x + 1, tank_pos.y + 23),
 							 barrel_image=barrel_image, starting_angle = randint(0, 360), player_tank=player_tank)
 		self.can_take_hits = 5
@@ -30,6 +31,15 @@ class Tank(MovingObject):
 		}
 
 	def update(self):
+		print(f"I am {self.is_enemy}, my state is {self.state}")
+		if self.state == TankState.ROTATING:
+			self.angle = (self.angle + 3) % 360
+			self.image = pygame.transform.rotate(self.image_origin, self.angle)
+			print(f"My angle is {self.angle}")
+			if self.angle == self.target_angle:
+				self.state = TankState.IDLE
+				self.target_angle = None
+
 		self.rect = self.image.get_rect(center=self.pos)
 
 		if self.shell and not self.shell.alive:
@@ -70,18 +80,14 @@ class Tank(MovingObject):
 
 	def is_change_direction(self, current_key_direction):
 		if self.orientation != current_key_direction:
+			self.state = TankState.ROTATING
 			angle_map = {
-				"up": 0,
-				"down": 180,
+				"up": 180,
+				"down": -180,
 				"left": 90,
-				"right": -90,
+				"right": 90,
 			}
-			print(f"My current angle: {self.angle}")
-			self.angle = angle_map[current_key_direction]
-			# here gradually rotate the base of the tank
-			
-			self.image = pygame.transform.rotate(self.image_origin, self.angle)
-			self.rect  = self.image.get_rect(center=self.pos)
+			self.target_angle = (self.angle + angle_map[current_key_direction]) % 360
 			self.set_orientation(current_key_direction)
 
 	# move the pos coordinates of the object

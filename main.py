@@ -20,8 +20,7 @@ if log_file.is_file():
 logging.basicConfig(filename="./game_proj.log", level=logging.INFO)
 
 # game screen
-win = pygame.display.set_mode(size=(ScreenDimensions.SCREEN_WIDTH.value, ScreenDimensions.SCREEN_HEIGHT.value),
-                              flags=pygame.SCALED)
+win = pygame.display.set_mode(size=(ScreenDimensions.SCREEN_WIDTH.value, ScreenDimensions.SCREEN_HEIGHT.value))
 background = pygame.image.load("./graphics/Environment/sand.png").convert()
 pygame.display.set_caption("War of Tanks")
 

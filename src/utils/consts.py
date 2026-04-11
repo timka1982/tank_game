@@ -1,14 +1,16 @@
 from enum import Enum, Flag, auto
 
 class ScreenDimensions(Enum):
-    SCREEN_WIDTH = 960
-    SCREEN_HEIGHT = 720
+    SCREEN_WIDTH : float = 960
+    SCREEN_HEIGHT : float = 720
 
 class TankMovement(Enum):
     INITIAL_VEL = 50
     MAX_VEL = 150
     ACCELERATION = 5
     DECELERATION = 0.05
+    START_ANGLE = 0
+
 
 class FireRanges(Enum):
     TANK_DETECTION_RANGE = 300

@@ -1,5 +1,6 @@
 import pygame
 import threading
+from src.utils.consts import ScreenDimensions
 
 
 class MovingObject(pygame.sprite.Sprite):
