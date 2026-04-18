@@ -34,8 +34,8 @@ class Shell(MovingObject):
         self.rect = self.image.get_rect(center=self.pos)
 
     def move(self, keys, dt):
-        self.pos.x += 5 * math.sin(math.radians(self.angle))
-        self.pos.y += 5 * math.cos(math.radians(self.angle))
+        self.pos.x += 15 * math.sin(math.radians(self.angle))
+        self.pos.y += 15 * math.cos(math.radians(self.angle))
 
     def check_collisions(self, game_objects):
         if game_utils.is_outside_the_window(self.pos.x, self.pos.y):
