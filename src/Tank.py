@@ -13,7 +13,9 @@ class Tank(MovingObject):
 		super().__init__(tank_pos, tank_image, )
 		self.is_enemy=is_enemy
 		self.orientation = "up"
-		self.angle = TankMovement.START_ANGLE.value
+		self.angle = 0
+		# self.angle = randint(0, 360)
+		self.image = pygame.transform.rotate(self.image_origin, self.angle)
 		self.vel = TankMovement.INITIAL_VEL.value
 		self.barrel = Barrel(tank_base=self, barrel_pos=Vector2(tank_pos.x + 1, tank_pos.y + 23),
 							 barrel_image=barrel_image, starting_angle = randint(0, 360), player_tank=player_tank)
@@ -28,12 +30,11 @@ class Tank(MovingObject):
 			pygame.K_a: ("left", Vector2(-1, 0)),
 			pygame.K_d: ("right", Vector2(1, 0))
 		}
-		self.op = None
 
 	def update(self):
 		if self.state == TankState.ROTATING:
-			self.angle = self.op(self.angle, 3) % 360
-			self.image = pygame.transform.rotate(self.image_origin, self.angle - 270)
+			self.angle = (self.angle + 3 * (1 if self.diff > 0 else -1 )) % 360
+			self.image = pygame.transform.rotate(self.image_origin, self.angle)
 			if self.angle == self.target_angle:
 				self.state = TankState.IDLE
 				self.target_angle = None
@@ -102,8 +103,9 @@ class Tank(MovingObject):
 				}
 			}
 			self.target_angle = (self.angle + angle_map[self.orientation][current_key_direction]) % 360
-			print(f"Target angle: {self.target_angle}\nCurrent angle {self.angle}")
-			self.op = operator.sub if self.target_angle < self.angle else operator.add
+			self.diff = (self.target_angle - self.angle) % 360
+			if self.diff > 180:
+				self.diff -= 360
 			self.set_orientation(current_key_direction)
 
 	# move the pos coordinates of the object
