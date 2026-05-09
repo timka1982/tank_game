@@ -44,7 +44,7 @@ class Barrel(MovingObject):
     def calculate_angle(pivot, mouse_pos):
         delta_x, delta_y = mouse_pos[0] - pivot[0], mouse_pos[1] - pivot[1]
 
-        angle = degrees(atan2(-delta_y, delta_x)) + 90
+        angle = degrees(atan2(delta_x, delta_y))
         return int(angle)
 
     def check_collisions(self, game_objects):

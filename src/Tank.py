@@ -1,4 +1,5 @@
 from random import randint
+import math
 import pygame
 import operator
 from src.MovingObject import MovingObject
@@ -117,13 +118,11 @@ class Tank(MovingObject):
 			for key, (direction, vec) in self.direction_map.items():
 				if keys[key]:
 					self.is_change_direction(direction)
-					if self.vel < TankMovement.MAX_VEL.value:
-						self.vel += TankMovement.ACCELERATION.value * dt
-						self.vel = min(self.vel, TankMovement.MAX_VEL.value)
-					displacement = vec * self.vel * dt
-					new_pos = self.pos + displacement
-					if not game_utils.is_outside_the_window(new_pos.x, new_pos.y):
-						self.pos = new_pos
+					x_pos = self.pos.x - TankMovement.MAX_VEL.value * dt *  math.sin(math.radians(self.angle))
+					y_pos = self.pos.y - TankMovement.MAX_VEL.value * dt * math.cos(math.radians(self.angle))
+					
+					if not game_utils.is_outside_the_window(x_coord=x_pos, y_coord=y_pos):
+						self.pos = Vector2(x_pos, y_pos)
 					break
 
 	def get_if_enemy(self):
