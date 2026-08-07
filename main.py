@@ -79,7 +79,7 @@ def main():
             if item.alive:
                 item.move(keys, dt)
                 item.check_collisions([remain_item for remain_index, remain_item in enumerate(moving_items_group) if remain_item.alive and remain_index != index])
-            else:
+            else:   
                 # if object is "dead" remove it
                 moving_items_group.remove(item)
 

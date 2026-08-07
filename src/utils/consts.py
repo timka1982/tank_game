@@ -22,7 +22,8 @@ class ObjectTypes(Enum):
 
 class TankState(Flag):
     IDLE = 0
-    ROTATING = auto()
+    TURNING = auto()
+    TURNING_WHILE_MOVING = auto()
     MOVING = auto()
     SLOWING_DOWN = auto()
 
